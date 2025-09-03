@@ -52,6 +52,32 @@ public class SqlConverter {
         SQLITE_TO_MYSQL_TYPES.put("NVARCHAR", "VARCHAR");
         SQLITE_TO_MYSQL_TYPES.put("CHAR", "CHAR");
         SQLITE_TO_MYSQL_TYPES.put("CHARACTER", "CHAR");
+        
+        // SQLite BLOB到MySQL空间数据类型的映射（默认为GEOMETRY）
+        SQLITE_TO_MYSQL_TYPES.put("GEOMETRY", "GEOMETRY");
+        SQLITE_TO_MYSQL_TYPES.put("POINT", "POINT");
+        SQLITE_TO_MYSQL_TYPES.put("LINESTRING", "LINESTRING");
+        SQLITE_TO_MYSQL_TYPES.put("POLYGON", "POLYGON");
+        SQLITE_TO_MYSQL_TYPES.put("MULTIPOINT", "MULTIPOINT");
+        SQLITE_TO_MYSQL_TYPES.put("MULTILINESTRING", "MULTILINESTRING");
+        SQLITE_TO_MYSQL_TYPES.put("MULTIPOLYGON", "MULTIPOLYGON");
+        SQLITE_TO_MYSQL_TYPES.put("GEOMETRYCOLLECTION", "GEOMETRYCOLLECTION");
+        
+        // 其他MySQL特有类型
+        SQLITE_TO_MYSQL_TYPES.put("LONGTEXT", "LONGTEXT");
+        SQLITE_TO_MYSQL_TYPES.put("MEDIUMTEXT", "MEDIUMTEXT");
+        SQLITE_TO_MYSQL_TYPES.put("LONGBLOB", "LONGBLOB");
+        SQLITE_TO_MYSQL_TYPES.put("MEDIUMBLOB", "MEDIUMBLOB");
+        SQLITE_TO_MYSQL_TYPES.put("BINARY", "BINARY");
+        SQLITE_TO_MYSQL_TYPES.put("VARBINARY", "VARBINARY");
+        SQLITE_TO_MYSQL_TYPES.put("TINYTEXT", "TINYTEXT");
+        SQLITE_TO_MYSQL_TYPES.put("TINYBLOB", "TINYBLOB");
+        SQLITE_TO_MYSQL_TYPES.put("JSON", "JSON");
+        SQLITE_TO_MYSQL_TYPES.put("ENUM", "ENUM");
+        SQLITE_TO_MYSQL_TYPES.put("SET", "SET");
+        SQLITE_TO_MYSQL_TYPES.put("YEAR", "YEAR");
+        SQLITE_TO_MYSQL_TYPES.put("BIT", "BIT");
+        SQLITE_TO_MYSQL_TYPES.put("BOOL", "BOOLEAN");
         SQLITE_TO_MYSQL_TYPES.put("DATETIME", "DATETIME");
         SQLITE_TO_MYSQL_TYPES.put("DATE", "DATE");
         SQLITE_TO_MYSQL_TYPES.put("TIME", "TIME");
@@ -92,6 +118,34 @@ public class SqlConverter {
         MYSQL_TO_SQLITE_TYPES.put("DATETIME", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("TIMESTAMP", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("YEAR", "INTEGER");
+        
+        // MySQL数值类型的UNSIGNED和ZEROFILL变体
+        MYSQL_TO_SQLITE_TYPES.put("TINYINT UNSIGNED", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("SMALLINT UNSIGNED", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("MEDIUMINT UNSIGNED", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("INT UNSIGNED", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("INTEGER UNSIGNED", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("BIGINT UNSIGNED", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("FLOAT UNSIGNED", "REAL");
+        MYSQL_TO_SQLITE_TYPES.put("DOUBLE UNSIGNED", "REAL");
+        MYSQL_TO_SQLITE_TYPES.put("DECIMAL UNSIGNED", "NUMERIC");
+        
+        // MySQL其他不常见类型
+        MYSQL_TO_SQLITE_TYPES.put("SERIAL", "INTEGER");
+        MYSQL_TO_SQLITE_TYPES.put("NATIONAL VARCHAR", "TEXT");
+        MYSQL_TO_SQLITE_TYPES.put("NVARCHAR", "TEXT");
+        MYSQL_TO_SQLITE_TYPES.put("NATIONAL CHAR", "TEXT");
+        MYSQL_TO_SQLITE_TYPES.put("NCHAR", "TEXT");
+        
+        // MySQL空间数据类型映射
+        MYSQL_TO_SQLITE_TYPES.put("GEOMETRY", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("POINT", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("LINESTRING", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("POLYGON", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("MULTIPOINT", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("MULTILINESTRING", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("MULTIPOLYGON", "BLOB");
+        MYSQL_TO_SQLITE_TYPES.put("GEOMETRYCOLLECTION", "BLOB");
     }
     
     /**
@@ -218,6 +272,14 @@ public class SqlConverter {
         
         // 移除括号中的内容进行匹配
         String baseType = upperType.replaceAll("\\([^)]*\\)", "");
+        
+        // 处理MySQL的UNSIGNED和ZEROFILL修饰符
+        if (baseType.contains(" UNSIGNED") || baseType.contains(" ZEROFILL")) {
+            // 保持完整的类型名称用于映射查找
+        } else {
+            // 移除其他修饰符但保留UNSIGNED
+            baseType = baseType.trim();
+        }
         
         String convertedType;
         if (targetType == DatabaseManager.DatabaseType.MYSQL) {

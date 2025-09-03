@@ -351,6 +351,30 @@ public class DataMigrator {
             }
         }
         
+        // 处理MySQL空间数据类型
+        if (columnType.contains("GEOMETRY") || columnType.contains("POINT") || 
+            columnType.contains("LINESTRING") || columnType.contains("POLYGON") ||
+            columnType.contains("MULTIPOINT") || columnType.contains("MULTILINESTRING") ||
+            columnType.contains("MULTIPOLYGON") || columnType.contains("GEOMETRYCOLLECTION")) {
+            // 空间数据通常以WKT或WKB格式存储
+            if (value instanceof String) {
+                // WKT格式保持为字符串
+                return value;
+            } else if (value instanceof byte[]) {
+                // WKB格式保持为字节数组
+                return value;
+            }
+            return value;
+        }
+        
+        // 处理MySQL其他特有类型
+        if (columnType.contains("LONGTEXT") || columnType.contains("MEDIUMTEXT") ||
+            columnType.contains("TINYTEXT") || columnType.contains("LONGBLOB") ||
+            columnType.contains("MEDIUMBLOB") || columnType.contains("TINYBLOB") ||
+            columnType.contains("BINARY") || columnType.contains("VARBINARY")) {
+            return value;
+        }
+        
         // 处理字符串到数值的转换
         if (targetType == DatabaseManager.DatabaseType.MYSQL && value instanceof String) {
             String stringValue = (String) value;
