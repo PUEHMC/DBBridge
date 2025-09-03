@@ -351,27 +351,12 @@ public class DataMigrator {
             }
         }
         
-        // 处理MySQL空间数据类型
+        // 处理MySQL空间数据类型（转换为BLOB时保持原始格式）
         if (columnType.contains("GEOMETRY") || columnType.contains("POINT") || 
             columnType.contains("LINESTRING") || columnType.contains("POLYGON") ||
             columnType.contains("MULTIPOINT") || columnType.contains("MULTILINESTRING") ||
             columnType.contains("MULTIPOLYGON") || columnType.contains("GEOMETRYCOLLECTION")) {
-            // 空间数据通常以WKT或WKB格式存储
-            if (value instanceof String) {
-                // WKT格式保持为字符串
-                return value;
-            } else if (value instanceof byte[]) {
-                // WKB格式保持为字节数组
-                return value;
-            }
-            return value;
-        }
-        
-        // 处理MySQL其他特有类型
-        if (columnType.contains("LONGTEXT") || columnType.contains("MEDIUMTEXT") ||
-            columnType.contains("TINYTEXT") || columnType.contains("LONGBLOB") ||
-            columnType.contains("MEDIUMBLOB") || columnType.contains("TINYBLOB") ||
-            columnType.contains("BINARY") || columnType.contains("VARBINARY")) {
+            // 空间数据保持原始格式（WKT字符串或WKB字节数组）
             return value;
         }
         

@@ -53,37 +53,20 @@ public class SqlConverter {
         SQLITE_TO_MYSQL_TYPES.put("CHAR", "CHAR");
         SQLITE_TO_MYSQL_TYPES.put("CHARACTER", "CHAR");
         
-        // SQLite BLOB到MySQL空间数据类型的映射（默认为GEOMETRY）
-        SQLITE_TO_MYSQL_TYPES.put("GEOMETRY", "GEOMETRY");
-        SQLITE_TO_MYSQL_TYPES.put("POINT", "POINT");
-        SQLITE_TO_MYSQL_TYPES.put("LINESTRING", "LINESTRING");
-        SQLITE_TO_MYSQL_TYPES.put("POLYGON", "POLYGON");
-        SQLITE_TO_MYSQL_TYPES.put("MULTIPOINT", "MULTIPOINT");
-        SQLITE_TO_MYSQL_TYPES.put("MULTILINESTRING", "MULTILINESTRING");
-        SQLITE_TO_MYSQL_TYPES.put("MULTIPOLYGON", "MULTIPOLYGON");
-        SQLITE_TO_MYSQL_TYPES.put("GEOMETRYCOLLECTION", "GEOMETRYCOLLECTION");
+        // SQLite实际支持的基本类型到MySQL的映射（尽可能无损转换）
+        SQLITE_TO_MYSQL_TYPES.put("TEXT", "TEXT");
+        SQLITE_TO_MYSQL_TYPES.put("BLOB", "LONGBLOB");
+        SQLITE_TO_MYSQL_TYPES.put("INTEGER", "BIGINT");
+        SQLITE_TO_MYSQL_TYPES.put("REAL", "DOUBLE");
+        SQLITE_TO_MYSQL_TYPES.put("NUMERIC", "DECIMAL(65,30)"); // 使用MySQL最大精度
         
-        // 其他MySQL特有类型
-        SQLITE_TO_MYSQL_TYPES.put("LONGTEXT", "LONGTEXT");
-        SQLITE_TO_MYSQL_TYPES.put("MEDIUMTEXT", "MEDIUMTEXT");
-        SQLITE_TO_MYSQL_TYPES.put("LONGBLOB", "LONGBLOB");
-        SQLITE_TO_MYSQL_TYPES.put("MEDIUMBLOB", "MEDIUMBLOB");
-        SQLITE_TO_MYSQL_TYPES.put("BINARY", "BINARY");
-        SQLITE_TO_MYSQL_TYPES.put("VARBINARY", "VARBINARY");
-        SQLITE_TO_MYSQL_TYPES.put("TINYTEXT", "TINYTEXT");
-        SQLITE_TO_MYSQL_TYPES.put("TINYBLOB", "TINYBLOB");
-        SQLITE_TO_MYSQL_TYPES.put("JSON", "JSON");
-        SQLITE_TO_MYSQL_TYPES.put("ENUM", "ENUM");
-        SQLITE_TO_MYSQL_TYPES.put("SET", "SET");
-        SQLITE_TO_MYSQL_TYPES.put("YEAR", "YEAR");
-        SQLITE_TO_MYSQL_TYPES.put("BIT", "BIT");
-        SQLITE_TO_MYSQL_TYPES.put("BOOL", "BOOLEAN");
+        // SQLite中的日期时间类型（实际存储为TEXT）
         SQLITE_TO_MYSQL_TYPES.put("DATETIME", "DATETIME");
         SQLITE_TO_MYSQL_TYPES.put("DATE", "DATE");
         SQLITE_TO_MYSQL_TYPES.put("TIME", "TIME");
         SQLITE_TO_MYSQL_TYPES.put("TIMESTAMP", "TIMESTAMP");
-        
-        // 初始化MySQL到SQLite的类型映射
+        // 初始化MySQL到SQLite的类型映射（尽可能保持精度）
+        // 数值类型
         MYSQL_TO_SQLITE_TYPES.put("TINYINT", "INTEGER");
         MYSQL_TO_SQLITE_TYPES.put("SMALLINT", "INTEGER");
         MYSQL_TO_SQLITE_TYPES.put("MEDIUMINT", "INTEGER");
@@ -98,6 +81,9 @@ public class SqlConverter {
         MYSQL_TO_SQLITE_TYPES.put("REAL", "REAL");
         MYSQL_TO_SQLITE_TYPES.put("DECIMAL", "NUMERIC");
         MYSQL_TO_SQLITE_TYPES.put("NUMERIC", "NUMERIC");
+        MYSQL_TO_SQLITE_TYPES.put("YEAR", "INTEGER");
+        
+        // 文本类型
         MYSQL_TO_SQLITE_TYPES.put("CHAR", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("VARCHAR", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("TINYTEXT", "TEXT");
@@ -107,17 +93,20 @@ public class SqlConverter {
         MYSQL_TO_SQLITE_TYPES.put("ENUM", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("SET", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("JSON", "TEXT");
+        
+        // 二进制类型
         MYSQL_TO_SQLITE_TYPES.put("BINARY", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("VARBINARY", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("TINYBLOB", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("BLOB", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("MEDIUMBLOB", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("LONGBLOB", "BLOB");
+        
+        // 日期时间类型（SQLite存储为TEXT但保持类型信息）
         MYSQL_TO_SQLITE_TYPES.put("DATE", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("TIME", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("DATETIME", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("TIMESTAMP", "TEXT");
-        MYSQL_TO_SQLITE_TYPES.put("YEAR", "INTEGER");
         
         // MySQL数值类型的UNSIGNED和ZEROFILL变体
         MYSQL_TO_SQLITE_TYPES.put("TINYINT UNSIGNED", "INTEGER");
@@ -137,7 +126,7 @@ public class SqlConverter {
         MYSQL_TO_SQLITE_TYPES.put("NATIONAL CHAR", "TEXT");
         MYSQL_TO_SQLITE_TYPES.put("NCHAR", "TEXT");
         
-        // MySQL空间数据类型映射
+        // MySQL空间数据类型映射到SQLite BLOB（有损转换，空间函数将不可用）
         MYSQL_TO_SQLITE_TYPES.put("GEOMETRY", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("POINT", "BLOB");
         MYSQL_TO_SQLITE_TYPES.put("LINESTRING", "BLOB");
