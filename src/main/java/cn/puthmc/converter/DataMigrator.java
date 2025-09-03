@@ -300,15 +300,72 @@ public class DataMigrator {
             return null;
         }
         
+        String columnType = column.getDataType().toUpperCase();
+        
         // 处理布尔值
         if (value instanceof Boolean) {
             return ((Boolean) value) ? 1 : 0;
+        }
+        
+        // 处理BIT类型
+        if (columnType.contains("BIT")) {
+            if (value instanceof Boolean) {
+                return ((Boolean) value) ? 1 : 0;
+            }
+            if (value instanceof Number) {
+                return ((Number) value).intValue() != 0 ? 1 : 0;
+            }
+        }
+        
+        // 处理JSON类型
+        if (columnType.contains("JSON")) {
+            if (targetType == DatabaseManager.DatabaseType.SQLITE) {
+                // MySQL JSON转SQLite TEXT
+                return value.toString();
+            }
+        }
+        
+        // 处理ENUM和SET类型
+        if (columnType.contains("ENUM") || columnType.contains("SET")) {
+            if (targetType == DatabaseManager.DatabaseType.SQLITE) {
+                // MySQL ENUM/SET转SQLite TEXT
+                return value.toString();
+            }
+        }
+        
+        // 处理YEAR类型
+        if (columnType.contains("YEAR")) {
+            if (targetType == DatabaseManager.DatabaseType.SQLITE) {
+                // MySQL YEAR转SQLite INTEGER
+                if (value instanceof Number) {
+                    return ((Number) value).intValue();
+                }
+                return Integer.parseInt(value.toString());
+            }
         }
         
         // 处理日期时间
         if (value instanceof Timestamp || value instanceof java.util.Date) {
             if (targetType == DatabaseManager.DatabaseType.SQLITE) {
                 return value.toString();
+            }
+        }
+        
+        // 处理字符串到数值的转换
+        if (targetType == DatabaseManager.DatabaseType.MYSQL && value instanceof String) {
+            String stringValue = (String) value;
+            if (columnType.contains("INT") || columnType.contains("DECIMAL") || 
+                columnType.contains("NUMERIC") || columnType.contains("FLOAT") || 
+                columnType.contains("DOUBLE")) {
+                try {
+                    if (columnType.contains("INT")) {
+                        return Long.parseLong(stringValue);
+                    } else {
+                        return Double.parseDouble(stringValue);
+                    }
+                } catch (NumberFormatException e) {
+                    logger.warn("无法转换字符串 '{}' 为数值类型 {}", stringValue, columnType);
+                }
             }
         }
         
