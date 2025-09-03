@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sqliteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#003B57;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0F4C75;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="mysqlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E97F02;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F2A900;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4CAF50;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8BC34A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景圆形 -->
+  <circle cx="32" cy="32" r="30" fill="#f8f9fa" stroke="#e9ecef" stroke-width="2"/>
+  
+  <!-- SQLite 数据库图标 (左侧) -->
+  <g transform="translate(8,16)">
+    <!-- 数据库圆柱体顶部 -->
+    <ellipse cx="8" cy="4" rx="7" ry="3" fill="url(#sqliteGrad)"/>
+    <!-- 数据库圆柱体主体 -->
+    <rect x="1" y="4" width="14" height="24" fill="url(#sqliteGrad)"/>
+    <!-- 数据库圆柱体底部 -->
+    <ellipse cx="8" cy="28" rx="7" ry="3" fill="url(#sqliteGrad)"/>
+    <!-- 数据库分层线 -->
+    <ellipse cx="8" cy="12" rx="7" ry="2" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+    <ellipse cx="8" cy="20" rx="7" ry="2" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+    <!-- SQLite 标识 -->
+    <text x="8" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#003B57" font-weight="bold">SQLite</text>
+  </g>
+  
+  <!-- 转换箭头 -->
+  <g transform="translate(32,28)">
+    <!-- 双向箭头 -->
+    <path d="M-8,0 L8,0" stroke="url(#arrowGrad)" stroke-width="3" fill="none"/>
+    <!-- 右箭头头部 -->
+    <path d="M4,-3 L8,0 L4,3" stroke="url(#arrowGrad)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- 左箭头头部 -->
+    <path d="M-4,-3 L-8,0 L-4,3" stroke="url(#arrowGrad)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- MySQL 数据库图标 (右侧) -->
+  <g transform="translate(40,16)">
+    <!-- 数据库圆柱体顶部 -->
+    <ellipse cx="8" cy="4" rx="7" ry="3" fill="url(#mysqlGrad)"/>
+    <!-- 数据库圆柱体主体 -->
+    <rect x="1" y="4" width="14" height="24" fill="url(#mysqlGrad)"/>
+    <!-- 数据库圆柱体底部 -->
+    <ellipse cx="8" cy="28" rx="7" ry="3" fill="url(#mysqlGrad)"/>
+    <!-- 数据库分层线 -->
+    <ellipse cx="8" cy="12" rx="7" ry="2" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+    <ellipse cx="8" cy="20" rx="7" ry="2" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.6"/>
+    <!-- MySQL 标识 -->
+    <text x="8" y="36" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" fill="#E97F02" font-weight="bold">MySQL</text>
+  </g>
+  
+  <!-- 装饰性数据流动效果 -->
+  <g opacity="0.3">
+    <circle cx="20" cy="20" r="1" fill="#4CAF50">
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0s"/>
+    </circle>
+    <circle cx="24" cy="24" r="1" fill="#4CAF50">
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    </circle>
+    <circle cx="40" cy="20" r="1" fill="#4CAF50">
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    <circle cx="44" cy="24" r="1" fill="#4CAF50">
+      <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+    </circle>
+  </g>
+</svg>
